@@ -51,10 +51,9 @@ class RuntimeLaunchConfigBuilderTest {
                 authToken = "unused-secret",
             )
 
-            assertFalse(config.environment.containsKey("ANTHROPIC_BASE_URL"))
-            assertFalse(config.environment.containsKey("ANTHROPIC_AUTH_TOKEN"))
-            assertFalse(config.environment.containsKey("ANTHROPIC_API_KEY"))
-            assertEquals("1", config.environment["DISABLE_AUTOUPDATER"])
+            // Subscription providers must not inject any credentials or endpoints; the runtime
+            // CLI signs in on its own, so the environment carries nothing beyond the base flag.
+            assertEquals(mapOf("DISABLE_AUTOUPDATER" to "1"), config.environment)
         }
     }
 
