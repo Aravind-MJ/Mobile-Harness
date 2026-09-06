@@ -45,15 +45,17 @@ class RuntimeLaunchConfigBuilderTest {
 
     @Test
     fun subscriptionLoginProvidersRelyOnRuntimeLoginWithoutAuthEnvironment() {
-        val config = RuntimeLaunchConfigBuilder.build(
-            ProviderProfile(ProviderKind.CODEX),
-            authToken = "unused-secret",
-        )
+        for (kind in ProviderKind.entries.filter { it.usesSubscriptionLogin }) {
+            val config = RuntimeLaunchConfigBuilder.build(
+                ProviderProfile(kind),
+                authToken = "unused-secret",
+            )
 
-        assertFalse(config.environment.containsKey("ANTHROPIC_BASE_URL"))
-        assertFalse(config.environment.containsKey("ANTHROPIC_AUTH_TOKEN"))
-        assertFalse(config.environment.containsKey("ANTHROPIC_API_KEY"))
-        assertEquals("1", config.environment["DISABLE_AUTOUPDATER"])
+            assertFalse(config.environment.containsKey("ANTHROPIC_BASE_URL"))
+            assertFalse(config.environment.containsKey("ANTHROPIC_AUTH_TOKEN"))
+            assertFalse(config.environment.containsKey("ANTHROPIC_API_KEY"))
+            assertEquals("1", config.environment["DISABLE_AUTOUPDATER"])
+        }
     }
 
     @Test

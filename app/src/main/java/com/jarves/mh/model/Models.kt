@@ -16,6 +16,8 @@ enum class ProviderKind(
     val defaultModel: String,
     val experimental: Boolean = false,
 ) {
+    // Subscription providers leave baseUrl/model blank ("default" is a placeholder that the
+    // runtime CLI resolves after its own sign-in); see usesSubscriptionLogin below.
     CLAUDE("Claude subscription", "Pro, Max, Team or Enterprise", ProviderProtocol.CLAUDE_LOGIN, "", "default"),
     CODEX("Codex subscription", "ChatGPT Plus, Pro, Team or Enterprise", ProviderProtocol.CODEX_LOGIN, "", "default"),
     ANTHROPIC("Anthropic API", "Usage billed through Console", ProviderProtocol.ANTHROPIC, "https://api.anthropic.com", "claude-sonnet-4-6"),
