@@ -6,7 +6,7 @@ import java.util.Locale
 import java.util.UUID
 import kotlin.random.Random
 
-enum class ProviderProtocol { CLAUDE_LOGIN, ANTHROPIC, ANTHROPIC_GATEWAY, OPENROUTER, OPENAI_RESPONSES, OPENAI_CHAT }
+enum class ProviderProtocol { CLAUDE_LOGIN, CODEX_LOGIN, ANTHROPIC, ANTHROPIC_GATEWAY, OPENROUTER, OPENAI_RESPONSES, OPENAI_CHAT }
 
 enum class ProviderKind(
     val title: String,
@@ -17,11 +17,20 @@ enum class ProviderKind(
     val experimental: Boolean = false,
 ) {
     CLAUDE("Claude subscription", "Pro, Max, Team or Enterprise", ProviderProtocol.CLAUDE_LOGIN, "", "default"),
+    CODEX("Codex subscription", "ChatGPT Plus, Pro, Team or Enterprise", ProviderProtocol.CODEX_LOGIN, "", "default"),
     ANTHROPIC("Anthropic API", "Usage billed through Console", ProviderProtocol.ANTHROPIC, "https://api.anthropic.com", "claude-sonnet-4-6"),
     LLM_ROUTER("OpenRouter", "Use your OpenRouter API key", ProviderProtocol.OPENROUTER, "https://openrouter.ai/api", "~anthropic/claude-sonnet-latest"),
     DEEPSEEK("DeepSeek", "Use your DeepSeek API key", ProviderProtocol.ANTHROPIC_GATEWAY, "https://api.deepseek.com/anthropic", "deepseek-v4-flash"),
     KIMI("Kimi", "Anthropic-compatible endpoint", ProviderProtocol.ANTHROPIC_GATEWAY, "https://api.moonshot.ai/anthropic", "kimi-k2.6", true),
     CUSTOM("Custom API", "Anthropic-compatible endpoint", ProviderProtocol.ANTHROPIC_GATEWAY, "", "", true),
+    ;
+
+    /**
+     * Subscription providers authenticate through the runtime CLI's own login flow
+     * (e.g. Claude or Codex sign-in) instead of a user-supplied API key or base URL.
+     */
+    val usesSubscriptionLogin: Boolean
+        get() = protocol == ProviderProtocol.CLAUDE_LOGIN || protocol == ProviderProtocol.CODEX_LOGIN
 }
 
 data class ProviderProfile(

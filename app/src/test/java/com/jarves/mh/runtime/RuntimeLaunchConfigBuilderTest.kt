@@ -44,6 +44,19 @@ class RuntimeLaunchConfigBuilderTest {
     }
 
     @Test
+    fun subscriptionLoginProvidersRelyOnRuntimeLoginWithoutAuthEnvironment() {
+        val config = RuntimeLaunchConfigBuilder.build(
+            ProviderProfile(ProviderKind.CODEX),
+            authToken = "unused-secret",
+        )
+
+        assertFalse(config.environment.containsKey("ANTHROPIC_BASE_URL"))
+        assertFalse(config.environment.containsKey("ANTHROPIC_AUTH_TOKEN"))
+        assertFalse(config.environment.containsKey("ANTHROPIC_API_KEY"))
+        assertEquals("1", config.environment["DISABLE_AUTOUPDATER"])
+    }
+
+    @Test
     fun openRouterMatchesVerifiedClaudeCodeEnvironment() {
         val config = RuntimeLaunchConfigBuilder.build(
             ProviderProfile(ProviderKind.LLM_ROUTER, "https://openrouter.ai/api/", "stealth/ox-alpha", true),
