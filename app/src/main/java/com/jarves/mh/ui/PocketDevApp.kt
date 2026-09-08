@@ -1617,7 +1617,7 @@ private fun ProviderSetupScreen(
                         }
                     },
                     onContinue = {
-                        if (selected == ProviderKind.CLAUDE) {
+                        if (selected.usesSubscriptionLogin) {
                             onSave(ProviderProfile(selected), "")
                         } else step = 2
                     },
@@ -1789,6 +1789,7 @@ private fun ProviderChoiceRow(
 ) {
     val accent = when (provider) {
         ProviderKind.CLAUDE -> Color(0xFFD97757)
+        ProviderKind.CODEX -> Color(0xFF10A37F)
         ProviderKind.ANTHROPIC -> Color(0xFFE7A26D)
         ProviderKind.LLM_ROUTER -> Color(0xFF5B8DEF)
         ProviderKind.DEEPSEEK -> Color(0xFF4D6BFE)
@@ -1797,6 +1798,7 @@ private fun ProviderChoiceRow(
     }
     val mark = when (provider) {
         ProviderKind.CLAUDE -> "C"
+        ProviderKind.CODEX -> "Cx"
         ProviderKind.ANTHROPIC -> "A"
         ProviderKind.LLM_ROUTER -> "OR"
         ProviderKind.DEEPSEEK -> "DS"

@@ -44,6 +44,20 @@ class RuntimeLaunchConfigBuilderTest {
     }
 
     @Test
+    fun subscriptionLoginProvidersRelyOnRuntimeLoginWithoutAuthEnvironment() {
+        for (kind in ProviderKind.entries.filter { it.usesSubscriptionLogin }) {
+            val config = RuntimeLaunchConfigBuilder.build(
+                ProviderProfile(kind),
+                authToken = "unused-secret",
+            )
+
+            // Subscription providers must not inject any credentials or endpoints; the runtime
+            // CLI signs in on its own, so the environment carries nothing beyond the base flag.
+            assertEquals(mapOf("DISABLE_AUTOUPDATER" to "1"), config.environment)
+        }
+    }
+
+    @Test
     fun openRouterMatchesVerifiedClaudeCodeEnvironment() {
         val config = RuntimeLaunchConfigBuilder.build(
             ProviderProfile(ProviderKind.LLM_ROUTER, "https://openrouter.ai/api/", "stealth/ox-alpha", true),

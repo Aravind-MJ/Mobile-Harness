@@ -7,7 +7,6 @@ import com.jarves.mh.model.ChatMessage
 import com.jarves.mh.model.ChangeItem
 import com.jarves.mh.model.DiffLine
 import com.jarves.mh.model.DiffLineType
-import com.jarves.mh.model.ProviderKind
 import com.jarves.mh.model.ProjectKind
 import com.jarves.mh.model.ProviderProfile
 import com.jarves.mh.model.RiskLevel
@@ -103,7 +102,7 @@ class ClaudeRuntimeBridge(
         eventBus.emit(RuntimeEvent.SessionStarted(sessionId))
         pushForegroundProgress("Starting Claude Code…")
         val secret = secretFor(provider).orEmpty()
-        if (provider.kind != ProviderKind.CLAUDE && secret.isBlank()) {
+        if (!provider.kind.usesSubscriptionLogin && secret.isBlank()) {
             eventBus.emit(RuntimeEvent.SessionFailed(sessionId, "No API key is saved for ${provider.kind.title}."))
             return@withContext sessionId
         }
